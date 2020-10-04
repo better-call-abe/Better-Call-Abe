@@ -39,14 +39,11 @@ export default {
   }),
   methods: {
     joinRoom() {
-      connect(
-        'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiIsImN0eSI6InR3aWxpby1mcGE7dj0xIn0.eyJqdGkiOiJTSzMzNjllOGM1MTI1Mzk5OTY1OGNmM2QxZWQ1ZTYzOGIxLTE2MDE3NzcxMDkiLCJpc3MiOiJTSzMzNjllOGM1MTI1Mzk5OTY1OGNmM2QxZWQ1ZTYzOGIxIiwic3ViIjoiQUNhZTE2NjU4YjQ0YWNhMTYyOTlhZmQwYWM0N2UyYWYzOSIsImV4cCI6MTYwMTc4MDcwOSwiZ3JhbnRzIjp7ImlkZW50aXR5IjoiZXhhbXBsZS11c2VyIiwidmlkZW8iOnsicm9vbSI6IlRlc3QifX19.oHm_UfcNEvNyo8I3cSJ6fMio2MANOJTBTwZqpzlvRy4',
-        {
-          audio: true,
-          name: 'Test',
-          video: { width: 640 }
-        }
-      ).then(room => {
+      connect(this.accessToken, {
+        audio: true,
+        name: 'Test',
+        video: { width: 640 }
+      }).then(room => {
         console.log(`Connected to Room: ${room.name}`)
         this.localJoined = true
 
@@ -60,6 +57,7 @@ export default {
           console.log(`Participant "${participant.identity}" connected`)
 
           participant.tracks.forEach(publication => {
+            console.log(publication)
             if (publication.isSubscribed) {
               const track = publication.track
               videoChatWindow.appendChild(track.attach())
@@ -74,7 +72,7 @@ export default {
     }
   },
   mounted() {
-    const twilioAccountSid = 'AC669496069f297202e6526c6428896165'
+    const twilioAccountSid = 'ACae16658b44aca16299afd0ac47e2af39'
     const twilioApiKey = 'SK51eb2b458199990b8f7ee00cbe6065d7'
     const twilioApiSecret = '0bQmCHNJUEFvgvXvQAT7gzT8nsLKaU1D'
     const token = new AccessToken(
@@ -90,7 +88,7 @@ export default {
     })
     // Add the grant to the token
     token.addGrant(videoGrant)
-
+    console.log(token.toJwt())
     this.accessToken = token.toJwt()
   }
 }
