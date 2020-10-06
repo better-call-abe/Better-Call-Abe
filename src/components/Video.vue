@@ -9,7 +9,7 @@
         :class="[localJoined ? 'grid-cols-2 gap-4' : '']"
       >
         <div ref="videoChatWindow"></div>
-        <!-- <div ref="remoteChatWindown"></div> -->
+        <div ref="remoteChatWindow"></div>
       </div>
       <button
         v-if="!localJoined"
@@ -48,6 +48,7 @@ export default {
         this.localJoined = true
 
         const videoChatWindow = this.$refs.videoChatWindow
+        const remoteChatWindow = this.$refs.remoteChatWindow
 
         console.log(videoChatWindow)
         createLocalVideoTrack().then(track => {
@@ -60,12 +61,12 @@ export default {
             console.log(publication)
             if (publication.isSubscribed) {
               const track = publication.track
-              videoChatWindow.appendChild(track.attach())
+              remoteChatWindow.appendChild(track.attach())
             }
           })
 
           participant.on('trackSubscribed', track => {
-            videoChatWindow.appendChild(track.attach())
+            remoteChatWindow.appendChild(track.attach())
           })
         })
       })
@@ -86,9 +87,7 @@ export default {
     const videoGrant = new VideoGrant({
       room: 'Test'
     })
-    // Add the grant to the token
     token.addGrant(videoGrant)
-    console.log(token.toJwt())
     this.accessToken = token.toJwt()
   }
 }
